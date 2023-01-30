@@ -92,7 +92,7 @@ public class AppendWriteFunction<I> extends AbstractStreamWriteFunction<I> {
   public void endInput() {
     super.endInput();
     flushData(true);
-    this.writeStatuses.clear();
+    this.writeStatuses.clear(); // 一旦关闭 就要创建新的文件
   }
 
   // -------------------------------------------------------------------------

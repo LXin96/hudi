@@ -68,12 +68,12 @@ public class BatchBootstrapOperator<I, O extends HoodieRecord<?>>
     final String partitionPath = record.getKey().getPartitionPath();
 
     if (haveSuccessfulCommits && !partitionPathSet.contains(partitionPath)) {
-      loadRecords(partitionPath);
+      loadRecords(partitionPath); // output indexRecord流
       partitionPathSet.add(partitionPath);
     }
 
     // send the trigger record
-    output.collect((StreamRecord<O>) element);
+    output.collect((StreamRecord<O>) element); // 除了output正常的record流
   }
 
   @Override

@@ -75,7 +75,7 @@ import static org.apache.hudi.util.StreamerUtil.isValidFile;
  *
  * <p>Each subtask of the function triggers the index bootstrap when the first element came in,
  * the record cannot be sent until all the index records have been sent.
- *
+ * 当第一个元素进来时，函数的每个子任务都会触发索引引导程序，直到所有索引记录都已发送后才能发送记录。
  * <p>The output records should then shuffle by the recordKey and thus do scalable write.
  */
 public class BootstrapOperator<I, O extends HoodieRecord<?>>

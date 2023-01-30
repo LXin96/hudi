@@ -141,6 +141,9 @@ public class BucketStreamWriteFunction<I> extends StreamWriteFunction<I> {
   /**
    * Get partition_bucket -> fileID mapping from the existing hudi table.
    * This is a required operation for each restart to avoid having duplicate file ids for one bucket.
+   *
+   * 从现有的hudi表获取 <分区 , <桶 --> fileId>>的映射
+   * 对于每一次重启都是一个需要的操作避免一个桶中有重复的file id
    */
   private void bootstrapIndexIfNeed(String partition) {
     if (bucketIndex.containsKey(partition)) {
@@ -150,7 +153,7 @@ public class BucketStreamWriteFunction<I> extends StreamWriteFunction<I> {
         this.metaClient.getBasePath() + "/" + partition));
 
     // Load existing fileID belongs to this task
-    Map<Integer, String> bucketToFileIDMap = new HashMap<>();
+    Map<Integer, String> bucketToFileIDMap = new HashMap<>(); // TODO 这样的意思就是一个bucket 只有一个 fileId ？？？
     this.writeClient.getHoodieTable().getFileSystemView().getAllFileGroups(partition).forEach(fileGroup -> {
       String fileID = fileGroup.getFileGroupId().getFileId();
       int bucketNumber = BucketIdentifier.bucketIdFromFileId(fileID);

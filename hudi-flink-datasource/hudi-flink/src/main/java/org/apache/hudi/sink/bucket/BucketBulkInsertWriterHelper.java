@@ -97,11 +97,13 @@ public class BucketBulkInsertWriterHelper extends BulkInsertWriterHelper {
     String partition = keyGen.getPartitionPath(record);
     final int bucketNum = BucketIdentifier.getBucketId(recordKey, indexKeys, numBuckets);
     String bucketId = partition + bucketNum;
+    // 根据bucketNum来计算的fileId
+    // 一旦计算完成fileId不再变化 uuid + bucketId
     return bucketIdToFileId.computeIfAbsent(bucketId, k -> BucketIdentifier.newBucketFileIdPrefix(bucketNum));
   }
 
   public static RowData rowWithFileId(Map<String, String> bucketIdToFileId, RowDataKeyGen keyGen, RowData record, String indexKeys, int numBuckets) {
-    final String fileId = getFileId(bucketIdToFileId, keyGen, record, indexKeys, numBuckets);
+    final String fileId = getFileId(bucketIdToFileId, keyGen, record, indexKeys, numBuckets); // uuid + bucketId
     return GenericRowData.of(StringData.fromString(fileId), record);
   }
 

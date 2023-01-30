@@ -29,6 +29,7 @@ import java.util.Arrays;
 
 /**
  * Tools to generate the sort operator.
+ * 用于产生排序的算子
  */
 public class SortOperatorGen {
   private final int[] sortIndices;

@@ -362,10 +362,11 @@ public class StreamWriteFunction<I> extends AbstractStreamWriteFunction<I> {
   }
 
   /**
-   * Buffers the given record.
+   * Buffers the given record. 缓存给定的记录
    *
    * <p>Flush the data bucket first if the bucket records size is greater than
    * the configured value {@link FlinkOptions#WRITE_BATCH_SIZE}.
+   * 当bucket的记录的大小大于WRITE_BATCH_SIZE的时候，将数据写入桶中
    *
    * <p>Flush the max size data bucket if the total buffer size exceeds the configured
    * threshold {@link FlinkOptions#WRITE_TASK_MAX_SIZE}.

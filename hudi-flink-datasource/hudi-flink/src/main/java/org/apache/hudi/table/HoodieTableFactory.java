@@ -82,6 +82,11 @@ public class HoodieTableFactory implements DynamicTableSourceFactory, DynamicTab
         conf);
   }
 
+  /**
+   * 创建hoodie的sink的function
+   * @param context
+   * @return
+   */
   @Override
   public DynamicTableSink createDynamicTableSink(Context context) {
     Configuration conf = FlinkOptions.fromMap(context.getCatalogTable().getOptions());
@@ -89,6 +94,7 @@ public class HoodieTableFactory implements DynamicTableSourceFactory, DynamicTab
         "Option [path] should not be empty.");
     ResolvedSchema schema = context.getCatalogTable().getResolvedSchema();
     sanityCheck(conf, schema);
+    // 启动配置参数的校验
     setupConfOptions(conf, context.getObjectIdentifier(), context.getCatalogTable(), schema);
     return new HoodieTableSink(conf, schema);
   }

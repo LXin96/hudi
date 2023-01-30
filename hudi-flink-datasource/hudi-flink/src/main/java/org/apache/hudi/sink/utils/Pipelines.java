@@ -89,9 +89,9 @@ public class Pipelines {
    *
    * <p>The write task switches to new file handle each time it receives a record
    * from the different partition path, the shuffle and sort would reduce small files.
-   *
+   * 写任务每次在收到不同分区路径数据的时候都会转换到新的文件句柄，shuffle和排序会产生小文件
    * <p>The bulk insert should be run in batch execution mode.
-   *
+   * 桶插入应该运行在批模式
    * @param conf       The configuration
    * @param rowType    The input row type
    * @param dataStream The input data stream
@@ -99,6 +99,7 @@ public class Pipelines {
    */
   public static DataStreamSink<Object> bulkInsert(Configuration conf, RowType rowType, DataStream<RowData> dataStream) {
     WriteOperatorFactory<RowData> operatorFactory = BulkInsertWriteOperator.getFactory(conf, rowType);
+    // 如果hudie的索引类型是桶索引类型
     if (OptionsResolver.isBucketIndexType(conf)) {
       String indexKeys = conf.getString(FlinkOptions.INDEX_KEY_FIELD);
       int numBuckets = conf.getInteger(FlinkOptions.BUCKET_INDEX_NUM_BUCKETS);
@@ -126,10 +127,11 @@ public class Pipelines {
           .addSink(DummySink.INSTANCE)
           .name("dummy");
     }
-
+    // 如果没有桶索引
     final String[] partitionFields = FilePathUtils.extractPartitionKeys(conf);
     if (partitionFields.length > 0) {
       RowDataKeyGen rowDataKeyGen = RowDataKeyGen.instance(conf, rowType);
+      // 分区写桶 不shuffle
       if (conf.getBoolean(FlinkOptions.WRITE_BULK_INSERT_SHUFFLE_INPUT)) {
 
         // shuffle by partition keys
@@ -139,6 +141,7 @@ public class Pipelines {
             KeyGroupRangeAssignment.computeDefaultMaxParallelism(conf.getInteger(FlinkOptions.WRITE_TASKS)), channels);
         dataStream = dataStream.partitionCustom(partitioner, rowDataKeyGen::getPartitionPath);
       }
+      // 分区写桶 排序
       if (conf.getBoolean(FlinkOptions.WRITE_BULK_INSERT_SORT_INPUT)) {
         SortOperatorGen sortOperatorGen = new SortOperatorGen(rowType, partitionFields);
         // sort by partition keys
@@ -205,6 +208,10 @@ public class Pipelines {
    * Constructs bootstrap pipeline as streaming.
    * The bootstrap operator loads the existing data index (primary key to file id mapping),
    * then sends the indexing data set to subsequent operator(usually the bucket assign operator).
+   *
+   * 将引导管道构建为流式传输，bootstrap operator加载现有的数据索引（主键到文件id的映射）
+   * 然后将索引数据发送给后续的operator（通常是bucket assign operator）
+   *
    */
   public static DataStream<HoodieRecord> bootstrap(
       Configuration conf,
@@ -304,6 +311,7 @@ public class Pipelines {
    *      | input2 | ===/     \=== | bucket assigner | ===/     \=== | task2 |
    *
    *      Note: a file group must be handled by one write task to avoid write conflict.
+   *      注意：一个文件组必需被一个写任务处理避免发生写冲突
    * </pre>
    *
    * <p>The bucket assigner assigns the inputs to suitable file groups, the write task caches
