@@ -659,10 +659,10 @@ public class HoodieIndexConfig extends HoodieConfig {
     private String getDefaultIndexType(EngineType engineType) {
       switch (engineType) {
         case SPARK:
-          return HoodieIndex.IndexType.SIMPLE.name();
+          return HoodieIndex.IndexType.SIMPLE.name(); // TODO spark使用simple
         case FLINK:
         case JAVA:
-          return HoodieIndex.IndexType.INMEMORY.name();
+          return HoodieIndex.IndexType.INMEMORY.name(); // TODO flink或者java使用
         default:
           throw new HoodieNotSupportedException("Unsupported engine " + engineType);
       }

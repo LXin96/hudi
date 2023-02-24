@@ -145,7 +145,7 @@ public class HoodieMergeHelper<T extends HoodieRecordPayload> extends
         return transformRecordBasedOnNewSchema(gReader, gWriter, encoderCache, decoderCache, record);
       }, table.getPreExecuteRunnable());
       
-      wrapper.execute();
+      wrapper.execute(); // 启动消费写文件线程
     } catch (Exception e) {
       throw new HoodieException(e);
     } finally {

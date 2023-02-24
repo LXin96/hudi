@@ -44,8 +44,8 @@ public class SortOperatorGen {
   public OneInputStreamOperator<RowData, RowData> createSortOperator() {
     SortCodeGenerator codeGen = createSortCodeGenerator();
     return new SortOperator(
-        codeGen.generateNormalizedKeyComputer("SortComputer"),
-        codeGen.generateRecordComparator("SortComparator"));
+        codeGen.generateNormalizedKeyComputer("SortComputer"), //排序器
+        codeGen.generateRecordComparator("SortComparator")); //比较器
   }
 
   public SortCodeGenerator createSortCodeGenerator() {

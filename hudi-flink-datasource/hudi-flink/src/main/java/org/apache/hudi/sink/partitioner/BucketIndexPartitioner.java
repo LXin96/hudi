@@ -41,7 +41,7 @@ public class BucketIndexPartitioner<T extends HoodieKey> implements Partitioner<
 
   @Override
   public int partition(HoodieKey key, int numPartitions) {
-    int curBucket = BucketIdentifier.getBucketId(key, indexKeyFields, bucketNum);
+    int curBucket = BucketIdentifier.getBucketId(key, indexKeyFields, bucketNum); //计算当前是分区中的第几个桶
     int globalHash = (key.getPartitionPath() + curBucket).hashCode() & Integer.MAX_VALUE;
     return BucketIdentifier.mod(globalHash, numPartitions);
   }

@@ -1519,6 +1519,8 @@ public abstract class BaseHoodieWriteClient<T extends HoodieRecordPayload, I, K,
 
   /**
    * Instantiates and initializes instance of {@link HoodieTable}, performing crucial bootstrapping
+   * 实例化和初始化{@link HoodieTable}的实例，执行关键的引导
+   *
    * operations such as:
    *
    * NOTE: This method is engine-agnostic and SHOULD NOT be overloaded, please check on

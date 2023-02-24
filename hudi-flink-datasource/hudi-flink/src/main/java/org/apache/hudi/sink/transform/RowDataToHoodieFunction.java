@@ -107,10 +107,10 @@ public class RowDataToHoodieFunction<I extends RowData, O extends HoodieRecord>
   @SuppressWarnings("rawtypes")
   private HoodieRecord toHoodieRecord(I record) throws Exception {
     GenericRecord gr = (GenericRecord) this.converter.convert(this.avroSchema, record);
-    final HoodieKey hoodieKey = keyGenerator.getKey(gr);
+    final HoodieKey hoodieKey = keyGenerator.getKey(gr); //TODO 主键 + 分区键
 
-    HoodieRecordPayload payload = payloadCreation.createPayload(gr);
-    HoodieOperation operation = HoodieOperation.fromValue(record.getRowKind().toByteValue());
-    return new HoodieAvroRecord<>(hoodieKey, payload, operation);
+    HoodieRecordPayload payload = payloadCreation.createPayload(gr); // TODO payload用于将记录转换为byte
+    HoodieOperation operation = HoodieOperation.fromValue(record.getRowKind().toByteValue()); //TODO 获取操作的值
+    return new HoodieAvroRecord<>(hoodieKey, payload, operation); // TODO [hoodieKey, payload, operation]
   }
 }

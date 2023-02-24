@@ -93,6 +93,7 @@ public abstract class AbstractStreamWriteFunction<I>
   /**
    * Flag saying whether the write task is waiting for the checkpoint success notification
    * after it finished a checkpoint.
+   * 标记，表示写任务在完成检查点后是否正在等待检查点成功通知
    *
    * <p>The flag is needed because the write task does not block during the waiting time interval,
    * some data buckets still flush out with old instant time. There are two cases that the flush may produce
@@ -266,7 +267,7 @@ public abstract class AbstractStreamWriteFunction<I>
         .timeout(config.getLong(FlinkOptions.WRITE_COMMIT_ACK_TIMEOUT))
         .action("instant initialize")
         .build();
-    while (confirming) {
+    while (confirming) { //默认是false
       // wait condition:
       // 1. there is no inflight instant
       // 2. the inflight instant does not change and the checkpoint has buffering data

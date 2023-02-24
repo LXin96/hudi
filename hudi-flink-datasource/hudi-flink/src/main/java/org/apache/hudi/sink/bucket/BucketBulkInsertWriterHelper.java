@@ -104,12 +104,12 @@ public class BucketBulkInsertWriterHelper extends BulkInsertWriterHelper {
 
   public static RowData rowWithFileId(Map<String, String> bucketIdToFileId, RowDataKeyGen keyGen, RowData record, String indexKeys, int numBuckets) {
     final String fileId = getFileId(bucketIdToFileId, keyGen, record, indexKeys, numBuckets); // uuid + bucketId
-    return GenericRowData.of(StringData.fromString(fileId), record);
+    return GenericRowData.of(StringData.fromString(fileId), record);// [fileId,record]
   }
 
   public static RowType rowTypeWithFileId(RowType rowType) {
     LogicalType[] types = new LogicalType[] {DataTypes.STRING().getLogicalType(), rowType};
-    String[] names = new String[] {FILE_GROUP_META_FIELD, "record"};
-    return RowType.of(types, names);
+    String[] names = new String[] {FILE_GROUP_META_FIELD, "record"}; // file group的元信息字段
+    return RowType.of(types, names); //组成[文件组元字段+record的schema类型]
   }
 }

@@ -156,9 +156,9 @@ public class FlinkWriteClients {
       boolean loadFsViewStorageConfig) {
     HoodieWriteConfig.Builder builder =
         HoodieWriteConfig.newBuilder()
-            .withEngineType(EngineType.FLINK)
+            .withEngineType(EngineType.FLINK) //TODO flink引擎
             .withPath(conf.getString(FlinkOptions.PATH))
-            .combineInput(conf.getBoolean(FlinkOptions.PRE_COMBINE), true)
+            .combineInput(conf.getBoolean(FlinkOptions.PRE_COMBINE), true) //TODO upsert 默认打开预合并
             .withMergeAllowDuplicateOnInserts(OptionsResolver.insertClustering(conf))
             .withClusteringConfig(
                 HoodieClusteringConfig.newBuilder()
@@ -196,8 +196,8 @@ public class FlinkWriteClients {
             .withMemoryConfig(
                 HoodieMemoryConfig.newBuilder()
                     .withMaxMemoryMaxSize(
-                        conf.getInteger(FlinkOptions.WRITE_MERGE_MAX_MEMORY) * 1024 * 1024L,
-                        conf.getInteger(FlinkOptions.COMPACTION_MAX_MEMORY) * 1024 * 1024L
+                        conf.getInteger(FlinkOptions.WRITE_MERGE_MAX_MEMORY) * 1024 * 1024L, //TODO 100M
+                        conf.getInteger(FlinkOptions.COMPACTION_MAX_MEMORY) * 1024 * 1024L // TODO 100M
                     ).build())
             .forTable(conf.getString(FlinkOptions.TABLE_NAME))
             .withStorageConfig(HoodieStorageConfig.newBuilder()

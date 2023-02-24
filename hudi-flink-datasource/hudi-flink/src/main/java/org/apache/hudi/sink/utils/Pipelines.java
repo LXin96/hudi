@@ -101,19 +101,19 @@ public class Pipelines {
     WriteOperatorFactory<RowData> operatorFactory = BulkInsertWriteOperator.getFactory(conf, rowType);
     // 如果hudie的索引类型是桶索引类型
     if (OptionsResolver.isBucketIndexType(conf)) {
-      String indexKeys = conf.getString(FlinkOptions.INDEX_KEY_FIELD);
-      int numBuckets = conf.getInteger(FlinkOptions.BUCKET_INDEX_NUM_BUCKETS);
+      String indexKeys = conf.getString(FlinkOptions.INDEX_KEY_FIELD); //获取索引字段
+      int numBuckets = conf.getInteger(FlinkOptions.BUCKET_INDEX_NUM_BUCKETS); //获取hudi每个分区的桶的数量
 
-      BucketIndexPartitioner<HoodieKey> partitioner = new BucketIndexPartitioner<>(numBuckets, indexKeys);
-      RowDataKeyGen keyGen = RowDataKeyGen.instance(conf, rowType);
-      RowType rowTypeWithFileId = BucketBulkInsertWriterHelper.rowTypeWithFileId(rowType);
-      InternalTypeInfo<RowData> typeInfo = InternalTypeInfo.of(rowTypeWithFileId);
+      BucketIndexPartitioner<HoodieKey> partitioner = new BucketIndexPartitioner<>(numBuckets, indexKeys); //记录分区 持有那个分区那个桶
+      RowDataKeyGen keyGen = RowDataKeyGen.instance(conf, rowType); // TODO keyGen ？？ 这个key指的是什么key
+      RowType rowTypeWithFileId = BucketBulkInsertWriterHelper.rowTypeWithFileId(rowType); //这个Row信息包含了 行的schema信息与fileGroup信息
+      InternalTypeInfo<RowData> typeInfo = InternalTypeInfo.of(rowTypeWithFileId);//推导出RowData的数据信息
 
       Map<String, String> bucketIdToFileId = new HashMap<>();
-      dataStream = dataStream.partitionCustom(partitioner, keyGen::getHoodieKey)
+      dataStream = dataStream.partitionCustom(partitioner, keyGen::getHoodieKey) // TODO 通过hoodieKey【recordKey+partitionKey】进行分区
           .map(record -> BucketBulkInsertWriterHelper.rowWithFileId(bucketIdToFileId, keyGen, record, indexKeys, numBuckets), typeInfo)
           .setParallelism(conf.getInteger(FlinkOptions.WRITE_TASKS)); // same parallelism as write task to avoid shuffle
-      if (conf.getBoolean(FlinkOptions.WRITE_BULK_INSERT_SORT_INPUT)) {
+      if (conf.getBoolean(FlinkOptions.WRITE_BULK_INSERT_SORT_INPUT)) { // TODO 是否根据某些特定的字段进行排序
         SortOperatorGen sortOperatorGen = BucketBulkInsertWriterHelper.getFileIdSorterGen(rowTypeWithFileId);
         dataStream = dataStream.transform("file_sorter", typeInfo, sortOperatorGen.createSortOperator())
             .setParallelism(conf.getInteger(FlinkOptions.WRITE_TASKS)); // same parallelism as write task to avoid shuffle
@@ -131,7 +131,7 @@ public class Pipelines {
     final String[] partitionFields = FilePathUtils.extractPartitionKeys(conf);
     if (partitionFields.length > 0) {
       RowDataKeyGen rowDataKeyGen = RowDataKeyGen.instance(conf, rowType);
-      // 分区写桶 不shuffle
+      // TODO 写桶是否shuffle 默认是true
       if (conf.getBoolean(FlinkOptions.WRITE_BULK_INSERT_SHUFFLE_INPUT)) {
 
         // shuffle by partition keys
@@ -141,7 +141,7 @@ public class Pipelines {
             KeyGroupRangeAssignment.computeDefaultMaxParallelism(conf.getInteger(FlinkOptions.WRITE_TASKS)), channels);
         dataStream = dataStream.partitionCustom(partitioner, rowDataKeyGen::getPartitionPath);
       }
-      // 分区写桶 排序
+      // TODO 分区写桶 排序 默认是TRUE
       if (conf.getBoolean(FlinkOptions.WRITE_BULK_INSERT_SORT_INPUT)) {
         SortOperatorGen sortOperatorGen = new SortOperatorGen(rowType, partitionFields);
         // sort by partition keys

@@ -183,13 +183,13 @@ public class FlinkOptions extends HoodieConfig {
       .booleanType()
       .defaultValue(false)
       .withDescription("Whether to bootstrap the index state from existing hoodie table, default false");
-
+  // 默认是以天为单位
   public static final ConfigOption<Double> INDEX_STATE_TTL = ConfigOptions
       .key("index.state.ttl")
       .doubleType()
       .defaultValue(0D)
       .withDescription("Index state ttl in days, default stores the index permanently");
-
+  // 如果相同的key的数据来自不同的分区，那么会更新旧分区的索引 这是开启全局索引的参数
   public static final ConfigOption<Boolean> INDEX_GLOBAL_ENABLED = ConfigOptions
       .key("index.global.enabled")
       .booleanType()

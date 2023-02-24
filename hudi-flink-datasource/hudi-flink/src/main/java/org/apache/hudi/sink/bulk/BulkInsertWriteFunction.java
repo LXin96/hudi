@@ -111,9 +111,9 @@ public class BulkInsertWriteFunction<I>
 
   @Override
   public void open(Configuration parameters) throws IOException {
-    this.taskID = getRuntimeContext().getIndexOfThisSubtask();
-    this.writeClient = FlinkWriteClients.createWriteClient(this.config, getRuntimeContext());
-    this.ckpMetadata = CkpMetadata.getInstance(config);
+    this.taskID = getRuntimeContext().getIndexOfThisSubtask(); // 获取当前的subtask的num
+    this.writeClient = FlinkWriteClients.createWriteClient(this.config, getRuntimeContext()); //获取flink的读写客户端
+    this.ckpMetadata = CkpMetadata.getInstance(config); // TODO 如果最后一次cp没有完成会复用上一次的cp的instant
     this.initInstant = lastPendingInstant();
     sendBootstrapEvent();
     initWriterHelper();

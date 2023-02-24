@@ -169,7 +169,8 @@ public class FSUtils {
   }
 
   public static String makeBaseFileName(String instantTime, String writeToken, String fileId, String fileExtension) {
-    return String.format("%s_%s_%s%s", fileId, writeToken, instantTime, fileExtension);
+    //TODO fffd9c7d-e22e-4c69-ae90-c6423e90562b_335-600-2_20230214134944864.parquet
+    return String.format("%s_%s_%s%s", fileId, writeToken, instantTime, fileExtension); //base的文件名称为
   }
 
   public static String makeBootstrapIndexFileName(String instantTime, String fileId, String ext) {

@@ -128,7 +128,7 @@ public class StreamWriteFunction<I> extends AbstractStreamWriteFunction<I> {
     // Based on the fact that the coordinator starts the checkpoint first,
     // it would check the validity.
     // wait for the buffer data flush out and request a new instant
-    flushRemaining(false);
+    flushRemaining(false); // TODO endInput 有界流还是无限流
   }
 
   @Override

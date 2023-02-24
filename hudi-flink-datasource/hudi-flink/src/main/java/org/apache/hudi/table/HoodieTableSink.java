@@ -68,18 +68,18 @@ public class HoodieTableSink implements DynamicTableSink, SupportsPartitioning, 
           .getCheckpointConfig().getCheckpointTimeout();
       // hoodie的写超时时间 内部设置为 checkpoint的超时时间
       conf.setLong(FlinkOptions.WRITE_COMMIT_ACK_TIMEOUT, ckpTimeout);
-      // set up default parallelism
+      // set up default parallelism 设置compaction任务、clustering、taskwriter以及默认的并行度
       OptionsInference.setupSinkTasks(conf, dataStream.getExecutionConfig().getParallelism());
       // 通过上层函数的已经解析好的schema 获得数据的逻辑类型
       RowType rowType = (RowType) schema.toSinkRowDataType().notNull().getLogicalType();
 
-      // bulk_insert mode
+      // bulk_insert mode TODO 似乎没有差异直接写桶了 啥也没干
       final String writeOperation = this.conf.get(FlinkOptions.OPERATION);
       if (WriteOperationType.fromValue(writeOperation) == WriteOperationType.BULK_INSERT) {
         return Pipelines.bulkInsert(conf, rowType, dataStream);
       }
 
-      // Append mode
+      // Append mode TODO 似乎就是直接写分区文件 然后不断的进行append
       if (OptionsResolver.isAppendMode(conf)) {
         DataStream<Object> pipeline = Pipelines.append(conf, rowType, dataStream, context.isBounded());
         if (OptionsResolver.needsAsyncClustering(conf)) {
@@ -90,7 +90,7 @@ public class HoodieTableSink implements DynamicTableSink, SupportsPartitioning, 
       }
 
       DataStream<Object> pipeline;
-      // bootstrap
+      // bootstrap  TODO 将rowdata转换为hoodieRecord 如果设置boostrap enable那就再接一个索引流算子
       final DataStream<HoodieRecord> hoodieRecordDataStream =
           Pipelines.bootstrap(conf, rowType, dataStream, context.isBounded(), overwrite);
       // write pipeline

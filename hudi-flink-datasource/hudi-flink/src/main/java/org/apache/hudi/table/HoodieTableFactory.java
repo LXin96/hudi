@@ -89,10 +89,14 @@ public class HoodieTableFactory implements DynamicTableSourceFactory, DynamicTab
    */
   @Override
   public DynamicTableSink createDynamicTableSink(Context context) {
+    // TODO 将hudi的配置参数读取到configuration中
     Configuration conf = FlinkOptions.fromMap(context.getCatalogTable().getOptions());
+    // TODO 校验path是否存在
     checkArgument(!StringUtils.isNullOrEmpty(conf.getString(FlinkOptions.PATH)),
         "Option [path] should not be empty.");
+    // TODO 从context中获得解析的schema
     ResolvedSchema schema = context.getCatalogTable().getResolvedSchema();
+    // TODO 校验hoodie.datasource.write.recordkey.field 如果没有设置预合并字段 则设置为no_precombine
     sanityCheck(conf, schema);
     // 启动配置参数的校验
     setupConfOptions(conf, context.getObjectIdentifier(), context.getCatalogTable(), schema);
@@ -177,17 +181,17 @@ public class HoodieTableFactory implements DynamicTableSourceFactory, DynamicTab
       ResolvedSchema schema) {
     // table name
     conf.setString(FlinkOptions.TABLE_NAME.key(), tablePath.getObjectName());
-    // hoodie key about options
+    // hoodie key about options 主键 分区键 分区类型
     setupHoodieKeyOptions(conf, table);
     // compaction options
     setupCompactionOptions(conf);
     // hive options
     setupHiveOptions(conf, tablePath);
-    // read options
+    // read options TODO 默认是批读 如果配置了read.start-commit｜｜read.end-commit 就是增量读
     setupReadOptions(conf);
-    // write options
+    // write options TODO 如果是cow表并且write.operation模式为upsert 那么write.precombine 设置为true
     setupWriteOptions(conf);
-    // infer avro schema from physical DDL schema
+    // infer avro schema from physical DDL schema TODO 在没有指定source avroschemapath或者avrosschema 那么就进行自己推断
     inferAvroSchema(conf, schema.toPhysicalRowDataType().notNull().getLogicalType());
   }
 

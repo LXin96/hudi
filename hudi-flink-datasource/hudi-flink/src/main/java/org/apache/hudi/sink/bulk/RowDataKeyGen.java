@@ -126,7 +126,7 @@ public class RowDataKeyGen implements Serializable {
     }
     return new RowDataKeyGen(conf.getString(FlinkOptions.RECORD_KEY_FIELD), conf.getString(FlinkOptions.PARTITION_PATH_FIELD),
         rowType, conf.getBoolean(FlinkOptions.HIVE_STYLE_PARTITIONING), conf.getBoolean(FlinkOptions.URL_ENCODE_PARTITIONING),
-        keyGeneratorOpt);
+        keyGeneratorOpt);// keyGeneratorOpt是时间戳生成器 TODO 目前我不用关心
   }
 
   public HoodieKey getHoodieKey(RowData rowData) {

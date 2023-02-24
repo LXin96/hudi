@@ -104,6 +104,10 @@ public class BucketAssignFunction<K, I, O extends HoodieRecord<?>>
    */
   private final boolean globalIndex;
 
+  /**
+   * TODO 默认桶是全局索引 globalIndex ：INDEX_GLOBAL_ENABLED 默认为true，CHANGELOG_ENABLED默认为false
+   * @param conf
+   */
   public BucketAssignFunction(Configuration conf) {
     this.conf = conf;
     this.isChangingRecords = WriteOperationType.isChangingRecords(
