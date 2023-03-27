@@ -103,10 +103,15 @@ public class RowDataToHoodieFunction<I extends RowData, O extends HoodieRecord>
    * @param record The input record
    * @return HoodieRecord based on the configuration
    * @throws IOException if error occurs
+   *
+   * TODO： 在进行toHoodieRecord 时候 keyGenerator 用于生成hoodieKey
+   *        HoodieRecord包含[hoodieKey, payload, operation]
+   *        payload 在toHoodieRecord的时候 将对应的payload 设置到对应的record中了
+   *        operation 在这个时候已经知道具体的操作方式了
    */
   @SuppressWarnings("rawtypes")
   private HoodieRecord toHoodieRecord(I record) throws Exception {
-    GenericRecord gr = (GenericRecord) this.converter.convert(this.avroSchema, record);
+    GenericRecord gr = (GenericRecord) this.converter.convert(this.avroSchema, record); //TODO 转换为hoodie的原生记录
     final HoodieKey hoodieKey = keyGenerator.getKey(gr); //TODO 主键 + 分区键
 
     HoodieRecordPayload payload = payloadCreation.createPayload(gr); // TODO payload用于将记录转换为byte

@@ -237,10 +237,11 @@ public class Pipelines {
       DataStream<RowData> dataStream,
       boolean bounded,
       boolean overwrite) {
-    final boolean globalIndex = conf.getBoolean(FlinkOptions.INDEX_GLOBAL_ENABLED);
+    final boolean globalIndex = conf.getBoolean(FlinkOptions.INDEX_GLOBAL_ENABLED); //TODO 默认是全局索引
     if (overwrite || OptionsResolver.isBucketIndexType(conf)) {
       return rowDataToHoodieRecord(conf, rowType, dataStream);
     } else if (bounded && !globalIndex && OptionsResolver.isPartitionedTable(conf)) {
+      //TODO：是否是有界的 是否是全局索引 同时还要是分区表
       return boundedBootstrap(conf, rowType, dataStream);
     } else {
       return streamBootstrap(conf, rowType, dataStream, bounded);
@@ -271,6 +272,7 @@ public class Pipelines {
    * Constructs bootstrap pipeline for batch execution mode.
    * The indexing data set is loaded before the actual data write
    * in order to support batch UPSERT.
+   * TODO 为批处理执行模式构造引导管道。索引数据集在实际数据写入之前加载，以便支持批量UPSERT。
    */
   private static DataStream<HoodieRecord> boundedBootstrap(
       Configuration conf,

@@ -51,6 +51,7 @@ public interface HoodieLogFormat {
   /**
    * The current version of the log format. Anytime the log format changes this version needs to be bumped and
    * corresponding changes need to be made to {@link HoodieLogFormatVersion}
+   * TODO:日志格式的当前版本。 每当日志格式发生变化时，都需要修改此版本并且对HoodieLogFormatVersion做出改变需要做相应的改变
    */
   int CURRENT_VERSION = 1;
 

@@ -517,6 +517,7 @@ public class HoodieAvroUtils {
 
   /**
    * Obtain value of the provided field, denoted by dot notation. e.g: a.b.c
+   * TODO 获取提供字段的值，用点表示法表示。例句:a.b.c
    */
   public static Object getNestedFieldVal(GenericRecord record, String fieldName, boolean returnNullIfNotFound, boolean consistentLogicalTimestampEnabled) {
     String[] parts = fieldName.split("\\.");

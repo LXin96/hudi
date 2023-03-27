@@ -1508,9 +1508,10 @@ public abstract class BaseHoodieWriteClient<T extends HoodieRecordPayload, I, K,
    * Instantiates engine-specific instance of {@link HoodieTable} as well as performs necessary
    * bootstrapping operations (for ex, validating whether Metadata Table has to be bootstrapped)
    *
+   * TODO 实例化 {@link HoodieTable} 的引擎特定实例并执行必要的引导操作（例如，验证是否必须引导元数据表）
    * NOTE: THIS OPERATION IS EXECUTED UNDER LOCK, THEREFORE SHOULD AVOID ANY OPERATIONS
    *       NOT REQUIRING EXTERNAL SYNCHRONIZATION
-   *
+   * TODO 此操作是在锁定下执行的，因此应避免任何不需要外部同步的操作
    * @param metaClient instance of {@link HoodieTableMetaClient}
    * @param instantTime current inflight instant time
    * @return instantiated {@link HoodieTable}
@@ -1524,6 +1525,7 @@ public abstract class BaseHoodieWriteClient<T extends HoodieRecordPayload, I, K,
    * operations such as:
    *
    * NOTE: This method is engine-agnostic and SHOULD NOT be overloaded, please check on
+   * TODO 此方法与引擎无关，不应重载，请检查
    * {@link #doInitTable(HoodieTableMetaClient, Option, boolean)} instead
    *
    * <ul>
@@ -1531,6 +1533,11 @@ public abstract class BaseHoodieWriteClient<T extends HoodieRecordPayload, I, K,
    *   <li>Bootstrapping Metadata Table (if required)</li>
    *   <li>Initializing metrics contexts</li>
    * </ul>
+   *
+   * 1）检查是否需要升级/降级（如果需要）
+   * 2）引导元数据表（如果需要）
+   * 3）初始化metric 上下文
+   *
    */
   protected final HoodieTable initTable(WriteOperationType operationType, Option<String> instantTime, boolean initialMetadataTableIfNecessary) {
     HoodieTableMetaClient metaClient = createMetaClient(true);

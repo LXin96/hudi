@@ -169,9 +169,9 @@ public class BucketAssignFunction<K, I, O extends HoodieRecord<?>>
 
   @SuppressWarnings("unchecked")
   private void processRecord(HoodieRecord<?> record, Collector<O> out) throws Exception {
-    // 1. put the record into the BucketAssigner;
-    // 2. look up the state for location, if the record has a location, just send it out;
-    // 3. if it is an INSERT, decide the location using the BucketAssigner then send it out.
+    // 1. put the record into the BucketAssigner;  // TODO 把记录放入BucketAssigner
+    // 2. look up the state for location, if the record has a location, just send it out; // TODO 在state中查找location，如果记录有location，发送出去
+    // 3. if it is an INSERT, decide the location using the BucketAssigner then send it out. // TODO 如果是插入操作，使用BucketAssigner 然后发送出去
     final HoodieKey hoodieKey = record.getKey();
     final String recordKey = hoodieKey.getRecordKey();
     final String partitionPath = hoodieKey.getPartitionPath();

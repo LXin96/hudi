@@ -34,7 +34,7 @@ public interface HoodieRowDataFileWriter {
 
   /**
    * Writes an {@link RowData} to the {@link HoodieRowDataFileWriter}. Also takes in associated record key to be added to bloom filter if required.
-   *
+   * TODO 写一个RowData到HoodieRowDataFileWriter， 如果需要，还需要将关联的记录密钥添加到布隆过滤器。
    * @throws IOException on any exception while writing.
    */
   void writeRow(String key, RowData row) throws IOException;

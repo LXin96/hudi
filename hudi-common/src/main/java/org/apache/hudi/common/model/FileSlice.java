@@ -29,6 +29,8 @@ import java.util.stream.Stream;
 /**
  * Within a file group, a slice is a combination of data file written at a commit time and list of log files, containing
  * changes to the data file from that commit time.
+ *
+ * TODO：在文件组中，切片是提交时写入的数据文件和日志文件列表的组合，其中包含从该提交时起对数据文件的更改。
  */
 public class FileSlice implements Serializable {
 

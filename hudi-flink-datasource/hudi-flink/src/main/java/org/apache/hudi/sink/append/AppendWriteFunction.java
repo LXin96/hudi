@@ -75,6 +75,7 @@ public class AppendWriteFunction<I> extends AbstractStreamWriteFunction<I> {
     // Based on the fact that the coordinator starts the checkpoint first,
     // it would check the validity.
     // wait for the buffer data flush out and request a new instant
+    // TODO 基于检查点先检查cp的事实，它会检查有效性，等待缓冲区数据刷新并请求一个新的时间线
     flushData(false);
   }
 
@@ -107,7 +108,7 @@ public class AppendWriteFunction<I> extends AbstractStreamWriteFunction<I> {
   //  Utilities
   // -------------------------------------------------------------------------
   private void initWriterHelper() {
-    final String instant = instantToWrite(true);
+    final String instant = instantToWrite(true); // TODO 获取正在进行的时间线 并且不阻塞写
     if (instant == null) {
       // in case there are empty checkpoints that has no input data
       throw new HoodieException("No inflight instant when flushing data!");

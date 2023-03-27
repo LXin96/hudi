@@ -156,7 +156,7 @@ public class HoodieAppendHandle<T extends HoodieRecordPayload, I, K, O> extends 
   }
 
   private void init(HoodieRecord record) {
-    if (doInit) {
+    if (doInit) { //TODO 元数据是否初始化
       // extract some information from the first record
       SliceView rtView = hoodieTable.getSliceView();
       Option<FileSlice> fileSlice = rtView.getLatestFileSlice(partitionPath, fileId);

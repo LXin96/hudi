@@ -86,6 +86,7 @@ public class FlinkWriteHandleFactory {
   /**
    * Base clazz for commit write handle factory,
    * it encapsulates the handle switching logic: INSERT OR UPSERT.
+   * TODO 封装了句柄的切换逻辑：insert或者upsert
    */
   private abstract static class BaseCommitWriteHandleFactory<T extends HoodieRecordPayload, I, K, O> implements Factory<T, I, K, O> {
     @Override

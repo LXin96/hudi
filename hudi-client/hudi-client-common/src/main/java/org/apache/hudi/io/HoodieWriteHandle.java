@@ -56,6 +56,7 @@ import static org.apache.hudi.common.util.StringUtils.isNullOrEmpty;
 
 /**
  * Base class for all write operations logically performed at the file group level.
+ * TODO 在文件组级逻辑上执行的所有写操作的基类。
  */
 public abstract class HoodieWriteHandle<T extends HoodieRecordPayload, I, K, O> extends HoodieIOHandle<T, I, K, O> {
 
@@ -76,6 +77,19 @@ public abstract class HoodieWriteHandle<T extends HoodieRecordPayload, I, K, O> 
    * This means we should process this record.
    *
    * We can see the usage of IGNORE_RECORD in
+   * org.apache.spark.sql.hudi.command.payload.ExpressionPayload
+   *
+   * 由{@link HoodieRecordPayload}返回的特殊记录，这意味着{@link HoodieRecordPayload}应该跳过这条记录。
+   * 该记录目前只用于{@link HoodieRecordPayload}，所以它不应该在网络中shuffle，我们可以用equal方法在本地比较该记录。
+   * HoodieRecordPayload#combineAndGetUpdateValue和HoodieRecordPayload#getInsertValue有3种返回:
+   * 1、Option.empty
+   * 这意味着我们应该删除这条记录。
+   * 2、ignore_record
+   * 这意味着我们不应该处理这个记录，只是跳过。
+   * 3、其他非空记录
+   * 这意味着我们应该处理这条记录。
+   *
+   * 我们可以看到IGNORE_RECORD的用法
    * org.apache.spark.sql.hudi.command.payload.ExpressionPayload
    */
   public static IgnoreRecord IGNORE_RECORD = new IgnoreRecord();
@@ -211,6 +225,7 @@ public abstract class HoodieWriteHandle<T extends HoodieRecordPayload, I, K, O> 
 
   /**
    * Perform the actual writing of the given record into the backing file.
+   * TODO 将给定记录实际写入backing文件。
    */
   public void write(HoodieRecord record, Option<IndexedRecord> insertValue) {
     // NO_OP

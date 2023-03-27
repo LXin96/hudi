@@ -294,6 +294,9 @@ public class FlinkOptions extends HoodieConfig {
       .noDefaultValue()
       .withDescription("End commit instant for reading, the commit time format should be 'yyyyMMddHHmmss'");
 
+  /**
+   * 启用数据跳过，允许查询利用索引通过跳过文件来减少搜索空间
+   */
   public static final ConfigOption<Boolean> READ_DATA_SKIPPING_ENABLED = ConfigOptions
       .key("read.data.skipping.enabled")
       .booleanType()

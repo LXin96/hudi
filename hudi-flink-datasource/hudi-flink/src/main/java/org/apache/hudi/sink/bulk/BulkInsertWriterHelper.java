@@ -121,7 +121,7 @@ public class BulkInsertWriterHelper {
 
   public List<HoodieInternalWriteStatus> getHoodieWriteStatuses() throws IOException {
     close();
-    return writeStatusList;
+    return writeStatusList;// TODO 这里面的writeStatusList是关闭了写操作的当前文件列表
   }
 
   private HoodieRowDataCreateHandle getRowCreateHandle(String partitionPath) throws IOException {
@@ -144,6 +144,10 @@ public class BulkInsertWriterHelper {
     return handles.get(partitionPath);
   }
 
+  /**
+   * 关闭 这里迭代handles的value 然后对handler进行关闭，进行关闭写操作，并添加到writeStatusList
+   * @throws IOException
+   */
   public void close() throws IOException {
     for (HoodieRowDataCreateHandle rowCreateHandle : handles.values()) {
       writeStatusList.add(rowCreateHandle.close());

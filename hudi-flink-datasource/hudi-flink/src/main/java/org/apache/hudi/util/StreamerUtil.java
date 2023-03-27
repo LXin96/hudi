@@ -214,6 +214,7 @@ public class StreamerUtil {
 
   /**
    * Returns whether the hoodie table exists under given path {@code basePath}.
+   * 通过在给定的路径下查找 .hoodie文件是否存在
    */
   public static boolean tableExists(String basePath, org.apache.hadoop.conf.Configuration hadoopConf) {
     // Hadoop FileSystem

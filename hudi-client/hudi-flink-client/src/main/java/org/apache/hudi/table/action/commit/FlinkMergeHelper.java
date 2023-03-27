@@ -61,13 +61,19 @@ public class FlinkMergeHelper<T extends HoodieRecordPayload> extends BaseMergeHe
     return FlinkMergeHelper.MergeHelperHolder.FLINK_MERGE_HELPER;
   }
 
+  /**
+   * 在进行handler和table进行merge的时候 其实table和mergeHandle的入参数是一致的
+   * @param table Hoodie Table
+   * @param mergeHandle
+   * @throws IOException
+   */
   @Override
   public void runMerge(HoodieTable<T, List<HoodieRecord<T>>, List<HoodieKey>, List<WriteStatus>> table,
                        HoodieMergeHandle<T, List<HoodieRecord<T>>, List<HoodieKey>, List<WriteStatus>> mergeHandle) throws IOException {
     final GenericDatumWriter<GenericRecord> gWriter;
     final GenericDatumReader<GenericRecord> gReader;
     Schema readSchema;
-
+    // TODO 是否需要外部schema
     final boolean externalSchemaTransformation = table.getConfig().shouldUseExternalSchemaTransformation();
     HoodieBaseFile baseFile = mergeHandle.baseFileForMerge();
     if (externalSchemaTransformation || baseFile.getBootstrapBaseFile().isPresent()) {

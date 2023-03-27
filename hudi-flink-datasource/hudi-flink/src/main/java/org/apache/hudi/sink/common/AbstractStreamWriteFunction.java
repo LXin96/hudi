@@ -104,6 +104,18 @@ public abstract class AbstractStreamWriteFunction<I>
    * <p>To solve, when this flag was set to true, we block the data flushing thus the #processElement method,
    * the flag was reset to false if the task receives the checkpoint success event or the latest inflight instant
    * time changed(the last instant committed successfully).
+   *
+   *
+   * 需要该标志是因为在等待时间间隔内写任务不会阻塞，一些数据桶仍然随着旧的即时时间被冲洗出来。
+   * 在两种情况下，如果旧的即时文件被成功提交，刷新操作可能会产生损坏的文件：
+   * 1）写句柄正在写数据但被中断，留下一个损坏的parquet文件
+   * 2）写句柄完成了写但没有关闭，留下一个空的parquet文件
+   *
+   * 为了解决这个问题，当这个标志被设置为true时，我们阻塞数据刷新，因此使用processElement方法，
+   * 如果任务接受到cp成功的事件，这个标志会设置为false，或者最新的inflight时间改变了（最新的instance成功提交）
+   *
+   *
+   *
    */
   protected volatile boolean confirming = false;
 
@@ -215,6 +227,7 @@ public abstract class AbstractStreamWriteFunction<I>
     int attemptId = getRuntimeContext().getAttemptNumber();
     if (attemptId > 0) {
       // either a partial or global failover, reuses the current inflight instant
+      // TODO 部分或者全局失败，重用当前的正在进行的时间线
       if (this.currentInstant != null) {
         LOG.info("Recover task[{}] for instant [{}] with attemptId [{}]", taskID, this.currentInstant, attemptId);
         this.currentInstant = null;

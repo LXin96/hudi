@@ -33,6 +33,7 @@ import java.util.Properties;
 
 /**
  * {@link HoodieRecordPayload} impl that honors ordering field in both preCombine and combineAndGetUpdateValue.
+ * TODO 它尊重preCombine和combineAndGetUpdateValue中的排序字段。
  * <p>
  * 1. preCombine - Picks the latest delta record for a key, based on an ordering field 2. combineAndGetUpdateValue/getInsertValue - Chooses the latest record based on ordering field value.
  */

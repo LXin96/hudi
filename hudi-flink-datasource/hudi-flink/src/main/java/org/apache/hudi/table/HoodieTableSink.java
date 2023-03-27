@@ -90,7 +90,7 @@ public class HoodieTableSink implements DynamicTableSink, SupportsPartitioning, 
       }
 
       DataStream<Object> pipeline;
-      // bootstrap  TODO 将rowdata转换为hoodieRecord 如果设置boostrap enable那就再接一个索引流算子
+      // bootstrap  TODO 将rowdata转换为hoodieRecord 如果设置boostrap enable那就再接一个索引流算子, 这个索引的流给谁用？？？
       final DataStream<HoodieRecord> hoodieRecordDataStream =
           Pipelines.bootstrap(conf, rowType, dataStream, context.isBounded(), overwrite);
       // write pipeline

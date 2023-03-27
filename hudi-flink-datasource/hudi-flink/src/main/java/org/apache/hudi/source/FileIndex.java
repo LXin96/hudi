@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 
 /**
  * A file index which supports listing files efficiently through metadata table.
- *
+ * 一个文件索引，可以通过metadata 表高效列举出文件，它缓存了分区路径防止重复查找
  * <p>It caches the partition paths to avoid redundant look up.
  */
 public class FileIndex {

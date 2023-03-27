@@ -42,13 +42,14 @@ import java.util.List;
 
 /**
  * A {@link HoodieMergeHandle} that supports MERGE write incrementally(small data buffers).
- *
+ * TODO 支持 MERGE 递增写入（小数据缓冲区）的 {@link HoodieMergeHandle}
  * <P>This handle is needed from the second mini-batch write for COW data bucket
  * when the data bucket is written using multiple mini-batches.
- *
+ * TODO 当使用多个小批量写入数据桶时，从第二次小批量写入 COW 数据桶时需要此句柄。
  * <p>For the incremental data buffer, it initializes and sets up the next file path to write,
  * then closes the file and rename to the old file name,
  * behaves like the new data buffer are appended to the old file.
+ * TODO 对于增量数据缓冲区，它初始化并设置下一个要写入的文件路径，然后关闭文件并重命名为旧文件名，就像新数据缓冲区附加到旧文件一样
  */
 public class FlinkMergeAndReplaceHandle<T extends HoodieRecordPayload, I, K, O>
     extends HoodieMergeHandle<T, I, K, O>
@@ -83,9 +84,13 @@ public class FlinkMergeAndReplaceHandle<T extends HoodieRecordPayload, I, K, O>
    * the invalid data file would be cleaned,
    * and this merger got a FileNotFoundException when it close the write file handle.
    *
+   * Flink的checkpoints是有序并且异步开始的，当一个写作业完成checkpoint(A)，因此文件系统视图获取到的一些写数据文件可能有无效
+   * 然后它继续下一个checkpoint（B）的写操作，如果想用尝试复用上无效数据文件的最后一个小数据桶。最后，当协调器接受到了checkpoint(A)
+   * 那么无效数据将会被清理，然后这个合并器在关闭文件句柄时，会出现FileNotFoundException
+   *
    * <p> To solve, deletes the invalid data file eagerly
    * so that the invalid file small bucket would never be reused.
-   *
+   * 所以我们急于删除无效数据文件，那么无效的小文件桶就不可能被重新使用
    * @param lastAttemptId The last attempt ID
    */
   private void deleteInvalidDataFile(long lastAttemptId) {

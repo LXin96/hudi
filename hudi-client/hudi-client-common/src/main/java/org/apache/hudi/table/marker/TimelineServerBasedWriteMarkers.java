@@ -56,6 +56,9 @@ import static org.apache.hudi.common.table.marker.MarkerOperation.MARKER_NAME_PA
  * Each data file has a corresponding marker entry, which is stored in a limited number of
  * underlying files maintained by the timeline server (each file contains multiple marker
  * entries).
+ *
+ * TODO 使用时间轴服务器作为代理来创建和删除标记的标记操作。每个数据文件都有一个相应的标记条目，
+ * TODO 该标记条目存储在时间轴服务器维护的有限数量的底层文件中(每个文件包含多个标记条目)
  */
 public class TimelineServerBasedWriteMarkers extends WriteMarkers {
   private static final Logger LOG = LogManager.getLogger(TimelineServerBasedWriteMarkers.class);

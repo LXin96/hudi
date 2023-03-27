@@ -88,6 +88,7 @@ public abstract class BaseMergeHelper<T extends HoodieRecordPayload, I, K, O> {
    * Skeleton file is a representation of the bootstrap file inside the table, with just the bare bone fields needed
    * for indexing, writing and other functionality.
    *
+   * 创建 Parquet 记录迭代器，提供从骨架和引导文件读取的记录的拼接视图。骨架文件是表内引导文件的表示，仅具有索引、写入和其他功能所需的裸骨字段
    */
   protected Iterator<GenericRecord> getMergingIterator(HoodieTable<T, I, K, O> table, HoodieMergeHandle<T, I, K, O> mergeHandle,
                                                                                                HoodieBaseFile baseFile, HoodieFileReader<GenericRecord> reader,

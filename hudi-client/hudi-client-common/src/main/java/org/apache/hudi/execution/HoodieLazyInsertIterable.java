@@ -78,6 +78,7 @@ public abstract class HoodieLazyInsertIterable<T extends HoodieRecordPayload>
   }
 
   // Used for caching HoodieRecord along with insertValue. We need this to offload computation work to buffering thread.
+  // TODO 用于缓存 HoodieRecord 和  insertValue。 我们需要这个来将计算工作卸载到缓冲线程
   public static class HoodieInsertValueGenResult<T extends HoodieRecord> {
     public T record;
     public Option<IndexedRecord> insertValue;

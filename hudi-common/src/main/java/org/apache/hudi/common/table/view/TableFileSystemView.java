@@ -98,6 +98,7 @@ public interface TableFileSystemView {
 
     /**
      * Get Latest File Slice for a given fileId in a given partition.
+     * TODO 获取给定分区中给定 fileId 的最新文件切片。
      */
     Option<FileSlice> getLatestFileSlice(String partitionPath, String fileId);
 
