@@ -73,7 +73,7 @@ public class HoodieTableSink implements DynamicTableSink, SupportsPartitioning, 
       // 通过上层函数的已经解析好的schema 获得数据的逻辑类型
       RowType rowType = (RowType) schema.toSinkRowDataType().notNull().getLogicalType();
 
-      // bulk_insert mode TODO 似乎没有差异直接写桶了 啥也没干
+      // bulk_insert mode TODO 似乎没有差异直接写桶了 啥也没干 (DONE)
       final String writeOperation = this.conf.get(FlinkOptions.OPERATION);
       if (WriteOperationType.fromValue(writeOperation) == WriteOperationType.BULK_INSERT) { //TODO 处理 bulk_insert
         return Pipelines.bulkInsert(conf, rowType, dataStream);

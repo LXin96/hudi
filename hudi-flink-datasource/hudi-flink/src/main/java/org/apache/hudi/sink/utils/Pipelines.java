@@ -192,7 +192,7 @@ public class Pipelines {
       RowType rowType,
       DataStream<RowData> dataStream,
       boolean bounded) {
-    if (!bounded) {
+    if (!bounded) { // TODO 如果是批处理
       // In principle, the config should be immutable, but the boundedness
       // is only visible when creating the sink pipeline.
       conf.setBoolean(FlinkOptions.WRITE_BULK_INSERT_SORT_INPUT, false);

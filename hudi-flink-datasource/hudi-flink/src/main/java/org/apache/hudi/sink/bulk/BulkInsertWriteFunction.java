@@ -166,7 +166,7 @@ public class BulkInsertWriteFunction<I>
   // -------------------------------------------------------------------------
 
   private void initWriterHelper() {
-    String instant = instantToWrite();
+    String instant = instantToWrite(); // 拿到一个checkpoint的时间
     this.writerHelper = WriterHelpers.getWriterHelper(this.config, this.writeClient.getHoodieTable(), this.writeClient.getConfig(),
         instant, this.taskID, getRuntimeContext().getNumberOfParallelSubtasks(), getRuntimeContext().getAttemptNumber(),
         this.rowType);
@@ -197,7 +197,7 @@ public class BulkInsertWriteFunction<I>
     TimeWait timeWait = TimeWait.builder()
         .timeout(config.getLong(FlinkOptions.WRITE_COMMIT_ACK_TIMEOUT))
         .action("instant initialize")
-        .build();
+        .build(); // 这里是cp的超时时间
     // TODO instant == null 意味着任务开始启动
     // TODO instant == instant.equals(this.initInstant) 意味着从checkpoint恢复
     // TODO 说明在进行获取 instant的时候 如果当前的checkpoint没有完成是无法拿到新的instant
@@ -210,6 +210,6 @@ public class BulkInsertWriteFunction<I>
       // refresh the inflight instant
       instant = lastPendingInstant();
     }
-    return instant;
+    return instant; //TODO  如果instant 没有改变 则不用更新
   }
 }
