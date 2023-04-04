@@ -48,7 +48,7 @@ public class HadoopConfigurations {
    * Creates a new hadoop configuration that is initialized with the given flink configuration.
    */
   public static org.apache.hadoop.conf.Configuration getHadoopConf(Configuration conf) {
-    org.apache.hadoop.conf.Configuration hadoopConf = FlinkClientUtil.getHadoopConf();
+    org.apache.hadoop.conf.Configuration hadoopConf = FlinkClientUtil.getHadoopConf(); //TODO 找hadoop的配置 如果没有找到则直接new一个出来
     Map<String, String> options = FlinkOptions.getPropertiesWithPrefix(conf.toMap(), HADOOP_PREFIX);
     options.forEach(hadoopConf::set);
     return hadoopConf;

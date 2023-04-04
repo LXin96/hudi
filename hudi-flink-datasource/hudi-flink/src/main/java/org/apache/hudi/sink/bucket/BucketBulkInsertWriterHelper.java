@@ -98,7 +98,8 @@ public class BucketBulkInsertWriterHelper extends BulkInsertWriterHelper {
     final int bucketNum = BucketIdentifier.getBucketId(recordKey, indexKeys, numBuckets);
     String bucketId = partition + bucketNum;
     // 根据bucketNum来计算的fileId
-    // 一旦计算完成fileId不再变化 uuid + bucketId
+    // <bucketId,filename> 到文件名的映射
+    // TODO 相同recordKey的桶的num 完成其映射 <bucketId :00000001-c0f6-4417-b9b8-ad7f9ea190c6> 替换了前8位的uudi的位置
     return bucketIdToFileId.computeIfAbsent(bucketId, k -> BucketIdentifier.newBucketFileIdPrefix(bucketNum));
   }
 

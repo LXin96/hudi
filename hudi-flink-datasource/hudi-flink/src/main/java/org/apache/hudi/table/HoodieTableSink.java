@@ -75,7 +75,7 @@ public class HoodieTableSink implements DynamicTableSink, SupportsPartitioning, 
 
       // bulk_insert mode TODO 似乎没有差异直接写桶了 啥也没干
       final String writeOperation = this.conf.get(FlinkOptions.OPERATION);
-      if (WriteOperationType.fromValue(writeOperation) == WriteOperationType.BULK_INSERT) {
+      if (WriteOperationType.fromValue(writeOperation) == WriteOperationType.BULK_INSERT) { //TODO 处理 bulk_insert
         return Pipelines.bulkInsert(conf, rowType, dataStream);
       }
 

@@ -35,8 +35,8 @@ public class BucketIndexPartitioner<T extends HoodieKey> implements Partitioner<
   private final String indexKeyFields;
 
   public BucketIndexPartitioner(int bucketNum, String indexKeyFields) {
-    this.bucketNum = bucketNum;
-    this.indexKeyFields = indexKeyFields;
+    this.bucketNum = bucketNum; //TODO 桶的数量
+    this.indexKeyFields = indexKeyFields; //TODO 索引key的字段 支持nested字段 a.b.c
   }
 
   @Override

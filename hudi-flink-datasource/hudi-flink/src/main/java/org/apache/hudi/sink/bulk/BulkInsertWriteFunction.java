@@ -113,7 +113,7 @@ public class BulkInsertWriteFunction<I>
   public void open(Configuration parameters) throws IOException {
     this.taskID = getRuntimeContext().getIndexOfThisSubtask(); // 获取当前的subtask的num
     this.writeClient = FlinkWriteClients.createWriteClient(this.config, getRuntimeContext()); //获取flink的读写客户端
-    this.ckpMetadata = CkpMetadata.getInstance(config); // TODO 如果最后一次cp没有完成会复用上一次的cp的instant
+    this.ckpMetadata = CkpMetadata.getInstance(config); // TODO 如果最后一次cp没有完成会复用上一次的cp的instant 去hdfs上面找
     this.initInstant = lastPendingInstant();
     sendBootstrapEvent();
     initWriterHelper();
@@ -198,6 +198,9 @@ public class BulkInsertWriteFunction<I>
         .timeout(config.getLong(FlinkOptions.WRITE_COMMIT_ACK_TIMEOUT))
         .action("instant initialize")
         .build();
+    // TODO instant == null 意味着任务开始启动
+    // TODO instant == instant.equals(this.initInstant) 意味着从checkpoint恢复
+    // TODO 说明在进行获取 instant的时候 如果当前的checkpoint没有完成是无法拿到新的instant
     while (instant == null || instant.equals(this.initInstant)) {
       // wait condition:
       // 1. there is no inflight instant

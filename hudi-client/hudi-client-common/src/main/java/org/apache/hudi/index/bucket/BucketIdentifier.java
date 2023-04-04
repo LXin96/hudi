@@ -68,7 +68,7 @@ public class BucketIdentifier implements Serializable {
         getHashKeysUsingIndexFields(recordKey, indexKeyFields);
   }
 
-  private static List<String> getHashKeysUsingIndexFields(String recordKey, List<String> indexKeyFields) {
+  private static List<String> getHashKeysUsingIndexFields(String recordKey, List<String> indexKeyFields) { //TODO ？？？ 疑惑
     Map<String, String> recordKeyPairs = Arrays.stream(recordKey.split(","))
         .map(p -> p.split(":"))
         .collect(Collectors.toMap(p -> p[0], p -> p[1]));
@@ -93,6 +93,10 @@ public class BucketIdentifier implements Serializable {
   }
 
   public static String newBucketFileIdPrefix(String bucketId) {
+    /**
+     * uuid :e4deb5c6-c0f6-4417-b9b8-ad7f9ea190c6
+     * after_replace :00000001-c0f6-4417-b9b8-ad7f9ea190c6 替换了前8位的uudi的位置
+     */
     return FSUtils.createNewFileIdPfx().replaceFirst(".{8}", bucketId);
   }
 
