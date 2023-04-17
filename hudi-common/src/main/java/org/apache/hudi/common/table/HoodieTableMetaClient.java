@@ -444,11 +444,12 @@ public class HoodieTableMetaClient implements Serializable {
     if (!fs.exists(basePathDir)) {
       fs.mkdirs(basePathDir);
     }
+    // 创建.hoodie文件夹
     Path metaPathDir = new Path(basePath, METAFOLDER_NAME);
     if (!fs.exists(metaPathDir)) {
       fs.mkdirs(metaPathDir);
     }
-    // create schema folder
+    // create schema folder 创建schema的文件夹
     Path schemaPathDir = new Path(metaPathDir, SCHEMA_FOLDER_NAME);
     if (!fs.exists(schemaPathDir)) {
       fs.mkdirs(schemaPathDir);

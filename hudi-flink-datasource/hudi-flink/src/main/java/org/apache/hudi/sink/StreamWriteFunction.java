@@ -424,7 +424,7 @@ public class StreamWriteFunction<I> extends AbstractStreamWriteFunction<I> {
     if (config.getBoolean(FlinkOptions.PRE_COMBINE)) {
       records = FlinkWriteHelper.newInstance().deduplicateRecords(records, (HoodieIndex) null, -1, this.writeClient.getConfig().getSchema());
     }
-    bucket.preWrite(records);//TODO 预写 其实就是找到这批数据属于的文件ID，fileId
+    bucket.preWrite(records);//TODO 预写 其实就是找到这批数据属于的文件ID，fileId 仅仅只替换了第一个record
     final List<WriteStatus> writeStatus = new ArrayList<>(writeFunction.apply(records, instant));
     records.clear();
     final WriteMetadataEvent event = WriteMetadataEvent.builder()

@@ -48,6 +48,7 @@ public class FlinkInMemoryStateIndex extends HoodieIndex<List<HoodieRecord>, Lis
   public <R> HoodieData<HoodieRecord<R>> tagLocation(
       HoodieData<HoodieRecord<R>> records, HoodieEngineContext context,
       HoodieTable hoodieTable) throws HoodieIndexException {
+    //TODO 不需要标记 内存索引的位置
     throw new UnsupportedOperationException("No need to tag location for FlinkInMemoryStateIndex");
   }
 
@@ -55,6 +56,7 @@ public class FlinkInMemoryStateIndex extends HoodieIndex<List<HoodieRecord>, Lis
   public HoodieData<WriteStatus> updateLocation(
       HoodieData<WriteStatus> writeStatuses, HoodieEngineContext context,
       HoodieTable hoodieTable) throws HoodieIndexException {
+    //TODO 不需要更新内存索引的位置
     throw new UnsupportedOperationException("No need to update location for FlinkInMemoryStateIndex");
   }
 
@@ -78,6 +80,7 @@ public class FlinkInMemoryStateIndex extends HoodieIndex<List<HoodieRecord>, Lis
 
   /**
    * Index needs to be explicitly updated after storage write.
+   * TODO：索引需要在存储写入后显式更新。
    */
   @Override
   public boolean isImplicitWithStorage() {

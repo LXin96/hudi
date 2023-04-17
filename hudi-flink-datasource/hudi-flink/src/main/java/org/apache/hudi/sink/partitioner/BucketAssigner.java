@@ -134,10 +134,10 @@ public class BucketAssigner implements AutoCloseable {
 
   public BucketInfo addInsert(String partitionPath) {
     // for new inserts, compute buckets depending on how many records we have for each partition
-    SmallFileAssign smallFileAssign = getSmallFileAssign(partitionPath);
+    SmallFileAssign smallFileAssign = getSmallFileAssign(partitionPath); // TODO 获得分区下 好几个小文件
 
     // first try packing this into one of the smallFiles
-    if (smallFileAssign != null && smallFileAssign.assign()) {
+    if (smallFileAssign != null && smallFileAssign.assign()) { // TODO：smallFileAssign.assign() 会找到合适的小文件
       return new BucketInfo(BucketType.UPDATE, smallFileAssign.getFileId(), partitionPath);
     }
 

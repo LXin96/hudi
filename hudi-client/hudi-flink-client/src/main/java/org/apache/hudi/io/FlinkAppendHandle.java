@@ -40,9 +40,11 @@ import java.util.List;
  * <p>For the first mini-batch, it initializes and sets up the next file path to write,
  * then closes the file writer. The subsequent mini-batches are appended to the same file
  * through a different append handle with same write file name.
- *
+ * TODO 对于第一个小批量，它初始化并设置下一个要写入的文件路径，然后关闭文件编写器。
+ * TODO 随后的小批量通过具有相同写入文件名的不同附加句柄附加到同一文件。
  * <p>The back-up writer may rollover on condition(for e.g, the filesystem does not support append
  * or the file size hits the configured threshold).
+ * TODO 备份写入器可能会根据条件滚动（例如，文件系统不支持追加或文件大小达到配置的阈值）
  */
 public class FlinkAppendHandle<T extends HoodieRecordPayload, I, K, O>
     extends HoodieAppendHandle<T, I, K, O> implements MiniBatchHandle {

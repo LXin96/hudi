@@ -426,7 +426,7 @@ public class HoodieTableConfig extends HoodieConfig {
       fs.mkdirs(metadataFolder);
     }
     HoodieConfig hoodieConfig = new HoodieConfig(properties);
-    Path propertyPath = new Path(metadataFolder, HOODIE_PROPERTIES_FILE);
+    Path propertyPath = new Path(metadataFolder, HOODIE_PROPERTIES_FILE); //hoodie.properties
     try (FSDataOutputStream outputStream = fs.create(propertyPath)) {
       if (!hoodieConfig.contains(NAME)) {
         throw new IllegalArgumentException(NAME.key() + " property needs to be specified");

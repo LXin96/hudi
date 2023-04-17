@@ -74,12 +74,16 @@ public class BucketAssignFunction<K, I, O extends HoodieRecord<?>>
   /**
    * Index cache(speed-up) state for the underneath file based(BloomFilter) indices.
    * When a record came in, we do these check:
-   *
+   * TODO:索引缓存(加速)状态的底层文件基于(BloomFilter)索引。当输入一条记录时，我们做以下检查:
    * <ul>
    *   <li>Try to load all the records in the partition path where the record belongs to</li>
+   *   尝试加载该记录所属的分区路径中的所有记录
    *   <li>Checks whether the state contains the record key</li>
+   *   检查状态是否包含记录键
    *   <li>If it does, tag the record with the location</li>
+   *   如果是，则用位置标记记录
    *   <li>If it does not, use the {@link BucketAssigner} to generate a new bucket ID</li>
+   *   如果没有，使用{@link BucketAssigner}生成一个新的桶ID
    * </ul>
    */
   private ValueState<HoodieRecordGlobalLocation> indexState;
@@ -106,14 +110,15 @@ public class BucketAssignFunction<K, I, O extends HoodieRecord<?>>
 
   /**
    * TODO 默认桶是全局索引 globalIndex ：INDEX_GLOBAL_ENABLED 默认为true，CHANGELOG_ENABLED默认为false
+   * TODO：在changlog模式下  会下发 delete数据和更新数据
    * @param conf
    */
   public BucketAssignFunction(Configuration conf) {
     this.conf = conf;
     this.isChangingRecords = WriteOperationType.isChangingRecords(
         WriteOperationType.fromValue(conf.getString(FlinkOptions.OPERATION)));
-    this.globalIndex = conf.getBoolean(FlinkOptions.INDEX_GLOBAL_ENABLED)
-        && !conf.getBoolean(FlinkOptions.CHANGELOG_ENABLED);
+    this.globalIndex = conf.getBoolean(FlinkOptions.INDEX_GLOBAL_ENABLED) // true
+        && !conf.getBoolean(FlinkOptions.CHANGELOG_ENABLED); //！false
   }
 
   @Override
@@ -159,6 +164,7 @@ public class BucketAssignFunction<K, I, O extends HoodieRecord<?>>
 
   @Override
   public void processElement(I value, Context ctx, Collector<O> out) throws Exception {
+    //TODO 如果上一步骤下发了索引就要更新状态中的索引
     if (value instanceof IndexRecord) {
       IndexRecord<?> indexRecord = (IndexRecord<?>) value;
       this.indexState.update((HoodieRecordGlobalLocation) indexRecord.getCurrentLocation());
@@ -180,10 +186,10 @@ public class BucketAssignFunction<K, I, O extends HoodieRecord<?>>
     // Only changing records need looking up the index for the location,
     // append only records are always recognized as INSERT.
     HoodieRecordGlobalLocation oldLoc = indexState.value();
-    if (isChangingRecords && oldLoc != null) {
+    if (isChangingRecords && oldLoc != null) { // isChangingRecords
       // Set up the instant time as "U" to mark the bucket as an update bucket.
       if (!Objects.equals(oldLoc.getPartitionPath(), partitionPath)) {
-        if (globalIndex) {
+        if (globalIndex) { // true
           // if partition path changes, emit a delete record for old partition path,
           // then update the index state using location with new partition path.
           HoodieRecord<?> deleteRecord = new HoodieAvroRecord<>(new HoodieKey(recordKey, oldLoc.getPartitionPath()),
@@ -192,7 +198,7 @@ public class BucketAssignFunction<K, I, O extends HoodieRecord<?>>
           deleteRecord.seal();
           out.collect((O) deleteRecord);
         }
-        location = getNewRecordLocation(partitionPath);
+        location = getNewRecordLocation(partitionPath); // 在新的分区找到对应的位置
       } else {
         location = oldLoc.toLocal("U");
         this.bucketAssigner.addUpdate(partitionPath, location.getFileId());

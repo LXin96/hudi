@@ -204,6 +204,7 @@ public class HoodieAppendHandle<T extends HoodieRecordPayload, I, K, O> extends 
         // base file to denote some log appends happened on a slice. writeToken will still fence concurrent
         // writers.
         // https://issues.apache.org/jira/browse/HUDI-1517
+        // TODO 由于实际写入的日志文件可能会根据翻转发生的时间而有所不同，因此我们使用基本文件来表示在切片上发生的一些日志追加。 writeToken 仍会隔离并发写入者。
         createMarkerFile(partitionPath, FSUtils.makeBaseFileName(baseInstantTime, writeToken, fileId, hoodieTable.getBaseFileExtension()));
 
         this.writer = createLogWriter(fileSlice, baseInstantTime);

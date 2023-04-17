@@ -47,9 +47,10 @@ import java.util.stream.Collectors;
 
 /**
  * REST Handler servicing marker requests.
- *
+ * 处理标记服务请求
  * The marker creation requests are handled asynchronous, while other types of requests
  * are handled synchronous.
+ * 标记创建请求是异步处理的，而其他类型的请求是同步处理的
  *
  * Marker creation requests are batch processed periodically by a thread.  Each batch
  * processing thread adds new markers to a marker file.  Given that marker file operation

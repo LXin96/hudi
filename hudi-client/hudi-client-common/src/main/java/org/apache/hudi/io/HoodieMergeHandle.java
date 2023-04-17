@@ -99,6 +99,7 @@ public class HoodieMergeHandle<T extends HoodieRecordPayload, I, K, O> extends H
 
   private static final Logger LOG = LogManager.getLogger(HoodieMergeHandle.class);
 
+  //TODO recordKey-->record的记录
   protected Map<String, HoodieRecord<T>> keyToNewRecords;
   protected Set<String> writtenRecordKeys;
   protected HoodieFileWriter<IndexedRecord> fileWriter;
@@ -341,7 +342,7 @@ public class HoodieMergeHandle<T extends HoodieRecordPayload, I, K, O> extends H
     if (keyToNewRecords.containsKey(key)) {
       // If we have duplicate records that we are updating, then the hoodie record will be deflated after
       // writing the first record. So make a copy of the record to be merged
-      HoodieRecord<T> hoodieRecord = keyToNewRecords.get(key).newInstance();
+      HoodieRecord<T> hoodieRecord = keyToNewRecords.get(key).newInstance(); // TODO 新老值
       try {
         Option<IndexedRecord> combinedAvroRecord =
             hoodieRecord.getData().combineAndGetUpdateValue(oldRecord,

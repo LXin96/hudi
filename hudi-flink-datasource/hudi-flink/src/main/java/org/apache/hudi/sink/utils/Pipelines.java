@@ -325,6 +325,7 @@ public class Pipelines {
    * @return the stream write data stream pipeline
    */
   public static DataStream<Object> hoodieStreamWrite(Configuration conf, DataStream<HoodieRecord> dataStream) {
+    //TODO 所以真正的桶索引的目的是为了插入数据的效率
     if (OptionsResolver.isBucketIndexType(conf)) {
       WriteOperatorFactory<HoodieRecord> operatorFactory = BucketStreamWriteOperator.getFactory(conf);
       int bucketNum = conf.getInteger(FlinkOptions.BUCKET_INDEX_NUM_BUCKETS);

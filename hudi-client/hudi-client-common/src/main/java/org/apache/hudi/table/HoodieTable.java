@@ -623,7 +623,7 @@ public abstract class HoodieTable<T extends HoodieRecordPayload, I, K, O> implem
 
   /**
    * Finalize the written data onto storage. Perform any final cleanups.
-   *
+   * TODO 将写入的数据最终确定到存储中。执行任何最终清理。
    * @param context HoodieEngineContext
    * @param stats   List of HoodieWriteStats
    * @throws HoodieIOException if some paths can't be finalized on storage
