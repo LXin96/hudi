@@ -283,6 +283,7 @@ public class IncrementalInputSplits implements Serializable {
       // when cdc is enabled, returns instant range with nullable boundary
       // to filter the reading instants on the timeline
       instantRange = getInstantRange(issuedInstant, endInstant, cdcEnabled);
+      LOG.info(String.format("Current instantRange: from %s to %s ", instantRange.getStartInstant(), instantRange.getEndInstant()));
     } else if (hollowSplits.isEmpty()) {
       LOG.info("No new instant found for the table under path " + path + ", skip reading");
       return Result.EMPTY;
