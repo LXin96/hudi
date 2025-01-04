@@ -18,6 +18,7 @@
 
 package org.apache.hudi.source;
 
+import org.apache.hudi.common.table.timeline.InstantComparison;
 import org.apache.hudi.metrics.FlinkStreamReadMetrics;
 import org.apache.hudi.table.format.mor.MergeOnReadInputFormat;
 import org.apache.hudi.table.format.mor.MergeOnReadInputSplit;
@@ -91,6 +92,8 @@ public class StreamReadOperator extends AbstractStreamOperator<RowData>
 
   private transient FlinkStreamReadMetrics readMetrics;
 
+  private String maxLatestCommitInstant = "";
+
   private StreamReadOperator(MergeOnReadInputFormat format, ProcessingTimeService timeService,
       MailboxExecutor mailboxExecutor) {
     this.format = Preconditions.checkNotNull(format, "The InputFormat should not be null.");
@@ -119,6 +122,7 @@ public class StreamReadOperator extends AbstractStreamOperator<RowData>
 
       for (MergeOnReadInputSplit split : inputSplitsState.get()) {
         splits.add(split);
+        setMaxLatestCommitInstant(split.getLatestCommit());
       }
     }
 
@@ -143,6 +147,7 @@ public class StreamReadOperator extends AbstractStreamOperator<RowData>
   @Override
   public void processElement(StreamRecord<MergeOnReadInputSplit> element) {
     splits.add(element.getValue());
+    setMaxLatestCommitInstant(element.getValue().getLatestCommit());
     enqueueProcessSplits();
   }
 
@@ -169,7 +174,7 @@ public class StreamReadOperator extends AbstractStreamOperator<RowData>
       // there is only one log message for one data bucket.
       LOG.info("Processing input split : {}", split);
       format.open(split);
-      readMetrics.setSplitLatestCommit(split.getLatestCommit());
+      readMetrics.setSplitLatestCommit(split.getLatestCommit(), maxLatestCommitInstant);
     }
 
     try {
@@ -285,5 +290,9 @@ public class StreamReadOperator extends AbstractStreamOperator<RowData>
         watermarkInterval,
         -1,
         true);
+  }
+
+  private void setMaxLatestCommitInstant(String inputSplitLatestCommitInstant) {
+    maxLatestCommitInstant = InstantComparison.maxInstant(maxLatestCommitInstant, inputSplitLatestCommitInstant);
   }
 }

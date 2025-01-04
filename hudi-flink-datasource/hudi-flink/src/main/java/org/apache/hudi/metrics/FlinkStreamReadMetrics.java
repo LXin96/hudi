@@ -83,11 +83,11 @@ public class FlinkStreamReadMetrics extends HoodieFlinkMetrics {
     }
   }
 
-  public void setSplitLatestCommit(String splitLatestCommit) {
+  public void setSplitLatestCommit(String splitLatestCommit, String maxLatestCommitInstant) {
     try {
       Instant instant = HoodieInstantTimeGenerator.parseDateFromInstantTime(splitLatestCommit).toInstant();
       this.splitLatestCommit = instant.getEpochSecond();
-      this.splitLatestCommitDelay = Duration.between(instant, Instant.now()).getSeconds();
+      this.splitLatestCommitDelay = Duration.between(instant, Instant.parse(maxLatestCommitInstant)).getSeconds();
     } catch (ParseException e) {
       LOG.warn("Invalid input latest commit" + splitLatestCommit);
     }
